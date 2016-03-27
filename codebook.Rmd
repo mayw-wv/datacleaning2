@@ -1,0 +1,106 @@
+---
+title: "Code book for the final project for Data Cleaning course."
+output: html_document
+---
+
+The final data set is derived from several data sets in the project collection.  The R script joins
+and merges these data sets, then it tidies up the data by adding descriptive names to activities
+and renames the variables for quicker reading.  Aggregrate calculations are then done to prepare a
+final tidy data set.  This code book goes into more detail about this process  
+
+
+* Step 1
+
+Three types of data (six total data files) are appended and merged to form the original raw data set.
+"X-train", "y-train" and "subject train" are merged together.  "X-train" has most of the data, "y-train"
+and "subject train" hold the activity codes and human subject identifiers for each row the the "X-train"
+data set.  (The test data sets are similar.) The raw data set is named "proj_data" in the R script and 
+is combined as follows:
+
+  				"proj_data"
+
+			column 1	column 2	all other columns
+
+			 y-train	 subject-train	 x-train
+			 y-test		 subject-test 	 x-test           
+           
+* Step 2
+
+In Step 2 "proj_data" is reduced by selection on only the variables that involve measurements on mean or std.
+In technical terms this is done by commands like:
+
+			grepl("mean", names(proj_data)[i] )
+
+Only variables that start with mean() or std() are selected, none of the others, specifically not ones that have
+meanFreq() as the function.  The directions specifically asked for mean not functions that might start with the
+prefix "mean" and meanFreq refers to a number from a power spectrum of the signal which differs from the mean of
+the signal (which is already calculated in another variable for most variables of this type.)
+
+
+* Step 3
+
+Activity data are originally stored in the y_train and y_test data files. The 6 types of activities are stored in
+the activity_labels file.  The numbers in the activity column are replaced by character strings as follows:
+
+	1 -> Walking  2 -> Walking_upstairs 3 ->  Walking_downstairs  4 -> Sitting  5 -> Standing  6 - Laying
+
+
+* Step 4
+
+In this step the activity labels are changed from the raw data form to a more readable, quickly understandable form.
+
+			original form: tBodyAcc-mean()-X        or  	tBodyAccMag-mean()
+
+			new form:      mean(X, tBodyAcc)        or     mean(tBodyAccMag)
+
+The new form is more like R functional form or mathematical notation with the function (mean or std) as the first element.
+
+At the end of this step the data set is called "proj_data".
+
+* Step 5
+
+Here an independant data set ("tidy_data") is created that calculates the mean of each activity-subject pair (180 rows, 
+which is 30 subjects multiplied by 6 activities.) 
+
+			tidy_data <- aggregate(proj_data, list(activity=proj_data[,1], subject=proj_data[,2]), mean)
+
+
+Comments
+
+The variables are derived from the original variables which are listed below from
+the original codebook for the project.
+
+tBodyAcc-XYZ
+tGravityAcc-XYZ
+tBodyAccJerk-XYZ
+tBodyGyro-XYZ
+tBodyGyroJerk-XYZ
+tBodyAccMag
+tGravityAccMag
+tBodyAccJerkMag
+tBodyGyroMag
+tBodyGyroJerkMag
+fBodyAcc-XYZ
+fBodyAccJerk-XYZ
+fBodyGyro-XYZ
+fBodyAccMag
+fBodyAccJerkMag
+fBodyGyroMag
+fBodyGyroJerkMag
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+The set of variables that were estimated from these signals are: 
+
+mean(): Mean value
+std(): Standard deviation
+
+
+
+
+
+
+Our method is to join together the parts of the variable names in a different (more readable) order.
+
+
+The calculations are done with the R "aggregate" function along with "mean" and "std".
