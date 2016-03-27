@@ -4,19 +4,19 @@
 
 # the data will be prefaced by "proj" except for any temporary data files or save files defined along the way
 
-proj_header <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\features.txt", sep="", header=FALSE)
-proj_data <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\train\\x_train.txt", sep="", header=FALSE)
-proj_data2 <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\test\\x_test.txt", sep="", header=FALSE)
+proj_header <- read.table("features.txt", sep="", header=FALSE)
+proj_data <- read.table("x_train.txt", sep="", header=FALSE)
+proj_data2 <- read.table("x_test.txt", sep="", header=FALSE)
 # now append the two data sets: train and test and add proj_header as the names(proj_data)
 proj_data <- rbind(proj_data, proj_data2)
 names(proj_data) <- proj_header[,2]
 
 
 # now read in the y-train/test and subject train/test data sets
-y_train_data <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\train\\y_train.txt", sep="", header=FALSE)
-y_test_data <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\test\\y_test.txt", sep="", header=FALSE)
-subject_train_data <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\train\\subject_train.txt", sep="", header=FALSE)
-subject_test_data <- read.table("E:\\coursera_localrepo\\project data\\UCI HAR Dataset\\test\\subject_test.txt", sep="", header=FALSE)
+y_train_data <- read.table("y_train.txt", sep="", header=FALSE)
+y_test_data <- read.table("y_test.txt", sep="", header=FALSE)
+subject_train_data <- read.table("subject_train.txt", sep="", header=FALSE)
+subject_test_data <- read.table("subject_test.txt", sep="", header=FALSE)
 
 # now append train and test, then add in the other columns to the proj_data set
 activity_type <- rbind(y_train_data, y_test_data)
@@ -126,6 +126,6 @@ tidy_data <- aggregate(proj_data, list(activity=proj_data[,1], subject=proj_data
 tidy_data <- tidy_data[,-c(3,4)]  # remove excess
 
 # output data
-write.csv(tidy_data, file= "e://coursera_localrepo//tidy.csv")
+write.table(tidy_data, file= "tidy.txt", row.name=FALSE)
 
 # Step 5 is complete at this point "tidy" is the 2nd independant tidy data set mentioned in the directions.
